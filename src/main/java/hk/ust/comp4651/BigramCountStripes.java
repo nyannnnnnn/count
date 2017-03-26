@@ -58,7 +58,7 @@ public class BigramCountStripes extends Configured implements Tool {
 //						if(STRIPE.containsKey(words[j + 1])){
 //							STRIPE.increment(words[j + 1]);
 //						}else{
-							STRIPE.put(words[i + 1], 1);
+							STRIPE.increment(words[i + 1]);
 //						}
 //					}
 //				}
