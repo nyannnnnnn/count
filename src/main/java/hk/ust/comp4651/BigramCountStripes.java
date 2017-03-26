@@ -63,6 +63,7 @@ public class BigramCountStripes extends Configured implements Tool {
 //					}
 //				}
 				context.write(KEY, STRIPE);
+				STRIPE.clear();
 			}
 			
 			/*
@@ -104,6 +105,7 @@ public class BigramCountStripes extends Configured implements Tool {
 				BIGRAM.set(key.toString(), a);
 				context.write(BIGRAM, COUNT);
 			}
+			SUM_STRIPES.clear();
 			
 		}
 	}
@@ -126,6 +128,7 @@ public class BigramCountStripes extends Configured implements Tool {
 				SUM_STRIPES.plus(stripe);
 			}
 			context.write(key, SUM_STRIPES);
+			SUM_STRIPES.clear();
 			/*
 			 * TODO: Your implementation goes here
 			 */

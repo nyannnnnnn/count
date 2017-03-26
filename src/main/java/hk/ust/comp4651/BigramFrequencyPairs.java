@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
  */
 public class BigramFrequencyPairs extends Configured implements Tool {
 	private static final Logger LOG = Logger.getLogger(BigramFrequencyPairs.class);
-
+	private static int marginal = 0;
 	/*
 	 * TODO: write your Mapper here
 	 */
@@ -75,16 +75,15 @@ public class BigramFrequencyPairs extends Configured implements Tool {
 			/*
 			 * TODO: Your implementation goes here.
 			 */
-			int marginal = 0;
 			int sum = 0;
 		    for (IntWritable v: values) {
 		         sum += v.get();
 		    }
-		    if(key.getRightElement() == ""){
+		    if(key.getRightElement().toString().equals("")){
 		    	marginal = sum;
 		    }
 		    else{
-		    	VALUE.set(sum / marginal);
+		    	VALUE.set(sum /(float) marginal);
 		    	context.write(key, VALUE);
 		    }
 			

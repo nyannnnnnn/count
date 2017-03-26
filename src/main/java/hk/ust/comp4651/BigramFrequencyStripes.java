@@ -35,7 +35,7 @@ import org.apache.log4j.Logger;
 public class BigramFrequencyStripes extends Configured implements Tool {
 	private static final Logger LOG = Logger
 			.getLogger(BigramFrequencyStripes.class);
-
+	private static int marginal = 0;
 	/*
 	 * Mapper: emits <word, stripe> where stripe is a hash map
 	 */
@@ -61,11 +61,12 @@ public class BigramFrequencyStripes extends Configured implements Tool {
 						//if(STRIPE.containsKey(words[j + 1])){
 						//	STRIPE.increment(words[j + 1]);
 					//	}else{
-							STRIPE.put(words[i + 1], 1);
+							STRIPE.increment(words[i + 1]);
 						//}
 					//}
-				//}
-							STRIPE.put("", 1);
+							STRIPE.clear();
+							STRIPE.increment("");
+							
 				context.write(KEY, STRIPE);
 				//context.write(KEY, new HashMapStringIntWritable().put("", 1));
 			}
@@ -93,23 +94,31 @@ public class BigramFrequencyStripes extends Configured implements Tool {
 			/*
 			 * TODO: Your implementation goes here
 			 */
-			int marginal = 0;
+			
 			for(HashMapStringIntWritable stripe : stripes){
-				if(stripe.containsKey("")){
-					marginal = stripe.get("");
-					continue;
-				}
+//				if(stripe.containsKey("")){
+//					marginal = stripe.get("");
+//					continue;
+//				}
 				SUM_STRIPES.plus(stripe);
 				
 				
 			}
 			Set<String> keys = SUM_STRIPES.keySet();
 			for(String a : keys){
-				//marginal += SUM_STRIPES.get(a);
-				FREQ.set(SUM_STRIPES.get(a) / marginal);;
-				BIGRAM.set(key.toString(), a);
-				context.write(BIGRAM, FREQ);
+				//marginal += SUM_STRIPES.get(a);\
+				if(a.equals("")){
+					marginal = SUM_STRIPES.get(a);
+					FREQ.set(SUM_STRIPES.get(a) / marginal);;
+					BIGRAM.set(key.toString(), a);
+					context.write(BIGRAM, FREQ);
+				}else{
+					FREQ.set(SUM_STRIPES.get(a) / (float)marginal);;
+					BIGRAM.set(key.toString(), a);
+					context.write(BIGRAM, FREQ);
+				}
 			}
+			SUM_STRIPES.clear();
 		}
 	}
 
@@ -133,6 +142,7 @@ public class BigramFrequencyStripes extends Configured implements Tool {
 				SUM_STRIPES.plus(stripe);
 			}
 			context.write(key, SUM_STRIPES);
+			SUM_STRIPES.clear();
 		}
 	}
 
