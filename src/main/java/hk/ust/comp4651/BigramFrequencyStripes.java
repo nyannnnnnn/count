@@ -64,6 +64,7 @@ public class BigramFrequencyStripes extends Configured implements Tool {
 							STRIPE.increment(words[i + 1]);
 						//}
 					//}
+							context.write(KEY, STRIPE);
 							STRIPE.clear();
 							STRIPE.increment("");
 							
@@ -109,7 +110,7 @@ public class BigramFrequencyStripes extends Configured implements Tool {
 				//marginal += SUM_STRIPES.get(a);\
 				if(a.equals("")){
 					marginal = SUM_STRIPES.get(a);
-					FREQ.set(SUM_STRIPES.get(a) / marginal);;
+					FREQ.set(marginal);;
 					BIGRAM.set(key.toString(), a);
 					context.write(BIGRAM, FREQ);
 				}else{

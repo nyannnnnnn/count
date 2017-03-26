@@ -81,6 +81,8 @@ public class BigramFrequencyPairs extends Configured implements Tool {
 		    }
 		    if(key.getRightElement().toString().equals("")){
 		    	marginal = sum;
+		    	VALUE.set(marginal);
+		    	context.write(key, VALUE);
 		    }
 		    else{
 		    	VALUE.set(sum /(float) marginal);
